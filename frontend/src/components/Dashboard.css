@@ -1,0 +1,30 @@
+.dash {
+  max-width: 980px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+.dash__card {
+  border-radius: 14px;
+  padding: 36px 28px;
+  background: #233241;
+  color: #dfe9f6;
+  border: 1px solid #2a3a4b;
+  box-shadow: 0 14px 40px rgba(0,0,0,.3);
+}
+.dash__placeholder {
+  text-align: center;
+  background: #233241;
+}
+.dash__placeholder h2 { margin: 0 0 10px; opacity: .95; }
+.dash__placeholder p { opacity: .75; }
+
+.dash__loading { text-align: center; background: #233241; }
+.spinner {
+  width: 28px; height: 28px; margin: 16px auto 0;
+  border: 3px solid rgba(255,255,255,.2);
+  border-top-color: #7fc3ff; border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg);} }
+
+.dash__result { padding: 0; background: transparent; border: none; box-shadow: none; }

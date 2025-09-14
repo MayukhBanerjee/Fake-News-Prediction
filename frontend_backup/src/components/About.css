@@ -1,0 +1,18 @@
+.about {
+  max-width: 980px; margin: 40px auto; padding: 0 16px;
+}
+.about h2 {
+  text-align: center; color: #46a4ff; margin-bottom: 18px;
+}
+.about__grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+.about__card {
+  background: #2b3d50; color: #eaf2fb; border-radius: 16px;
+  padding: 26px 18px; text-align: center;
+  box-shadow: 0 14px 36px rgba(0,0,0,.35);
+  border: 1px solid #31465b;
+}
+.about__name { font-weight: 800; font-size: 1.15rem; }
+.about__role { opacity: .85; margin-top: 6px; color: #9dc6ff; }
