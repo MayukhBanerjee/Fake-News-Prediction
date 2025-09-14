@@ -1,70 +1,99 @@
-# Getting Started with Create React App
+🤖 AI Fake News Detector
+An advanced, explainable AI system designed to combat misinformation by leveraging a unique dual-model analysis. This project combines a high-speed, pattern-based Machine Learning model with the deep contextual reasoning of Google's Gemini agent to provide nuanced and transparent verdicts on news articles.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+(Suggestion: Record a short GIF of your app in action and replace the link above)
 
-## Available Scripts
+💡 How It Works: The Dual-Model AI Engine
+This isn't just another fake news detector. It's an ensemble system that gets the best of two different AI approaches, much like pairing a highly trained sniffer dog with a seasoned detective.
 
-In the project directory, you can run:
+1. The Specialist: The ML Model 🐾
+A classic Logistic Regression model trained on a large dataset of real and fake news. It's incredibly fast and efficient.
 
-### `npm start`
+Role: Acts as the first line of analysis.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Strength: Rapidly detects statistical patterns, word frequencies (TF-IDF), and linguistic structures common in fake news.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Output: Provides a lightning-fast "Real" or "Fake" verdict and a quantifiable confidence score (e.g., 98% confident).
 
-### `npm test`
+2. The Generalist: The Gemini Agent 🕵️
+A powerful, generalist Large Language Model (Google Gemini) that understands context, nuance, and subtlety.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Role: Acts as the expert consultant, performing a deep, reason-based analysis.
 
-### `npm run build`
+Strength: It's not limited to the training data. It uses its vast knowledge to scrutinize claims, analyze language for bias, and evaluate the article's overall context.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Output: Provides an independent "Real" or "Fake" verdict and, crucially, a list of key phrases that justify its decision, adding a layer of Explainable AI (XAI).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. The Combined Verdict
+The system intelligently combines the outputs of both models:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Agreement: If both models agree, the final verdict is presented with high certainty.
 
-### `npm run eject`
+Disagreement: If the models return different verdicts, the system flags it as a "Conflicting Analysis." This is a key feature, as it transparently communicates that the article is nuanced and requires human judgment.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+✨ Key Features
+Hybrid AI Engine: Combines the speed of traditional ML with the reasoning power of a cutting-edge LLM.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Explainable AI (XAI): The Gemini agent highlights the specific words and phrases that influenced its verdict, making the results transparent and trustworthy.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+URL & Text Analysis: Seamlessly analyze news by pasting raw text or by providing a URL, which the system will automatically scrape and analyze.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Robust Backend: Built with FastAPI, the asynchronous backend handles concurrent analysis of both models efficiently, even under load.
 
-## Learn More
+Modern & Responsive UI: A fluid and intuitive frontend built with React, featuring smooth animations and a clear, color-coded results dashboard.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+🛠️ Technology Stack
+Backend: Python, FastAPI, scikit-learn, Google Generative AI, Newspaper3k
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Frontend: React, Axios, AOS (for animations), Validator.js
 
-### Code Splitting
+AI/ML: Logistic Regression, TF-IDF Vectorization, Google Gemini 1.5 Pro
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+🚀 Getting Started
+1. Prerequisites
+Python 3.8+ and Node.js v16+
 
-### Analyzing the Bundle Size
+A Google Gemini API key. You can get one from the Google AI Studio.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+2. Clone & Setup
+Bash
 
-### Making a Progressive Web App
+# Clone the repository
+git clone https://github.com/yourusername/ai-fake-news-detector.git
+cd ai-fake-news-detector/Hackathon
+3. Backend Setup
+Bash
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+# Create and activate a virtual environment
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
 
-### Advanced Configuration
+# Install Python dependencies
+pip install -r requirements.txt
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+# Create a .env file and add your API key
+echo "GEMINI_API_KEY=your_google_gemini_api_key" > .env
 
-### Deployment
+# Run the backend server (with an increased timeout for AI calls)
+uvicorn main:app --reload --timeout-keep-alive 120
+The API will be available at http://127.0.0.1:8000.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+4. Frontend Setup
+Bash
 
-### `npm run build` fails to minify
+# Navigate to the frontend directory in a new terminal
+cd frontend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# Install Node.js dependencies
+npm install
+
+# Run the React development server
+npm start
+The application will open at http://localhost:3000.
+
+📖 Acknowledgements
+This project was built on the Fake and Real News Dataset available on Kaggle.
+
+Powered by the Google Gemini API.
+
+Frontend bootstrapped with Create React App.
