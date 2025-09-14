@@ -1,99 +1,232 @@
-🤖 AI Fake News Detector
-An advanced, explainable AI system designed to combat misinformation by leveraging a unique dual-model analysis. This project combines a high-speed, pattern-based Machine Learning model with the deep contextual reasoning of Google's Gemini agent to provide nuanced and transparent verdicts on news articles.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Fake News Detector Showcase</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #1a1a1a;
+            --primary-blue: #3498db;
+            --card-bg: #2c3e50;
+            --text-light: #ecf0f1;
+            --text-muted: #95a5a6;
+            --accent-green: #2ecc71;
+            --accent-red: #e74c3c;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        header {
+            text-align: center;
+            padding: 4rem 0;
+            border-bottom: 1px solid var(--card-bg);
+        }
+        header h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin: 0;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        header p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 1rem auto 0;
+        }
+        section {
+            padding: 4rem 0;
+        }
+        h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--primary-blue);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .card {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+        .card h3 {
+            margin-top: 0;
+            font-size: 1.8rem;
+        }
+        .card strong {
+            color: var(--primary-blue);
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            background-color: var(--card-bg);
+            margin-bottom: 1rem;
+            padding: 1.2rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+        .feature-list li::before {
+            content: '✨';
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+        .tech-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .tech-pill {
+            background-color: var(--card-bg);
+            color: var(--text-light);
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        .code-block {
+            background-color: #161b22;
+            border: 1px solid var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+            border-top: 1px solid var(--card-bg);
+            color: var(--text-muted);
+        }
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
 
-(Suggestion: Record a short GIF of your app in action and replace the link above)
+    <div class="container">
+        <header data-aos="fade-in">
+            <h1>🤖 AI Fake News Detector</h1>
+            <p>An advanced, explainable AI system designed to combat misinformation by leveraging a unique dual-model analysis.</p>
+        </header>
 
-💡 How It Works: The Dual-Model AI Engine
-This isn't just another fake news detector. It's an ensemble system that gets the best of two different AI approaches, much like pairing a highly trained sniffer dog with a seasoned detective.
+        <section id="how-it-works" data-aos="fade-up">
+            <h2>💡 How It Works: The Dual-Model Engine</h2>
+            <div class="grid">
+                <div class="card" data-aos="fade-right" data-aos-delay="100">
+                    <h3>The Specialist: ML Model 🐾</h3>
+                    <p>A classic <strong>Logistic Regression</strong> model trained on a large dataset. It's incredibly fast and efficient, acting as the first line of analysis.</p>
+                    <p><strong>Output:</strong> Provides a lightning-fast "Real" or "Fake" verdict and a quantifiable <strong>confidence score</strong>.</p>
+                </div>
+                <div class="card" data-aos="fade-left" data-aos-delay="200">
+                    <h3>The Generalist: Gemini Agent 🕵️</h3>
+                    <p>A powerful <strong>Large Language Model (Google Gemini)</strong> that understands context, nuance, and subtlety. It acts as an expert consultant for a deep, reason-based analysis.</p>
+                    <p><strong>Output:</strong> Provides an independent verdict and a list of <strong>key phrases</strong> that justify its decision (Explainable AI).</p>
+                </div>
+            </div>
+        </section>
 
-1. The Specialist: The ML Model 🐾
-A classic Logistic Regression model trained on a large dataset of real and fake news. It's incredibly fast and efficient.
+        <section id="features" data-aos="fade-up">
+            <h2>✨ Key Features</h2>
+            <ul class="feature-list">
+                <li data-aos="fade-left">Combines the speed of traditional ML with the reasoning power of a cutting-edge LLM.</li>
+                <li data-aos="fade-left" data-aos-delay="100">Highlights the specific phrases that influenced the agent's verdict for full transparency.</li>
+                <li data-aos="fade-left" data-aos-delay="200">Seamlessly analyze news by pasting raw text or by providing a URL for automatic scraping.</li>
+                <li data-aos="fade-left" data-aos-delay="300">Asynchronous backend built with FastAPI handles concurrent analysis efficiently.</li>
+            </ul>
+        </section>
 
-Role: Acts as the first line of analysis.
+        <section id="tech-stack" data-aos="fade-up">
+            <h2>🛠️ Technology Stack</h2>
+            <div class="tech-grid">
+                <span class="tech-pill" data-aos="zoom-in">Python</span>
+                <span class="tech-pill" data-aos="zoom-in" data-aos-delay="50">FastAPI</span>
+                <span class="tech-pill" data-aos="zoom-in" data-aos-delay="100">scikit-learn</span>
+                <span class="tech-pill" data-aos="zoom-in" data-aos-delay="150">Google Gemini</span>
+                <span class="tech-pill" data-aos="zoom-in" data-aos-delay="200">React</span>
+                <span class="tech-pill" data-aos="zoom-in" data-aos-delay="250">Axios</span>
+                <span class="tech-pill" data-aos="zoom-in" data-aos-delay="300">AOS</span>
+            </div>
+        </section>
 
-Strength: Rapidly detects statistical patterns, word frequencies (TF-IDF), and linguistic structures common in fake news.
-
-Output: Provides a lightning-fast "Real" or "Fake" verdict and a quantifiable confidence score (e.g., 98% confident).
-
-2. The Generalist: The Gemini Agent 🕵️
-A powerful, generalist Large Language Model (Google Gemini) that understands context, nuance, and subtlety.
-
-Role: Acts as the expert consultant, performing a deep, reason-based analysis.
-
-Strength: It's not limited to the training data. It uses its vast knowledge to scrutinize claims, analyze language for bias, and evaluate the article's overall context.
-
-Output: Provides an independent "Real" or "Fake" verdict and, crucially, a list of key phrases that justify its decision, adding a layer of Explainable AI (XAI).
-
-3. The Combined Verdict
-The system intelligently combines the outputs of both models:
-
-Agreement: If both models agree, the final verdict is presented with high certainty.
-
-Disagreement: If the models return different verdicts, the system flags it as a "Conflicting Analysis." This is a key feature, as it transparently communicates that the article is nuanced and requires human judgment.
-
-✨ Key Features
-Hybrid AI Engine: Combines the speed of traditional ML with the reasoning power of a cutting-edge LLM.
-
-Explainable AI (XAI): The Gemini agent highlights the specific words and phrases that influenced its verdict, making the results transparent and trustworthy.
-
-URL & Text Analysis: Seamlessly analyze news by pasting raw text or by providing a URL, which the system will automatically scrape and analyze.
-
-Robust Backend: Built with FastAPI, the asynchronous backend handles concurrent analysis of both models efficiently, even under load.
-
-Modern & Responsive UI: A fluid and intuitive frontend built with React, featuring smooth animations and a clear, color-coded results dashboard.
-
-🛠️ Technology Stack
-Backend: Python, FastAPI, scikit-learn, Google Generative AI, Newspaper3k
-
-Frontend: React, Axios, AOS (for animations), Validator.js
-
-AI/ML: Logistic Regression, TF-IDF Vectorization, Google Gemini 1.5 Pro
-
-🚀 Getting Started
-1. Prerequisites
-Python 3.8+ and Node.js v16+
-
-A Google Gemini API key. You can get one from the Google AI Studio.
-
-2. Clone & Setup
-Bash
-
-# Clone the repository
-git clone https://github.com/yourusername/ai-fake-news-detector.git
-cd ai-fake-news-detector/Hackathon
-3. Backend Setup
-Bash
-
-# Create and activate a virtual environment
-python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
-
-# Install Python dependencies
+        <section id="getting-started" data-aos="fade-up">
+            <h2>🚀 Getting Started</h2>
+            <h3>Backend Setup</h3>
+            <div class="code-block" data-aos="fade-up">
+# Install dependencies
 pip install -r requirements.txt
 
-# Create a .env file and add your API key
+# Create .env file and add API key
 echo "GEMINI_API_KEY=your_google_gemini_api_key" > .env
 
-# Run the backend server (with an increased timeout for AI calls)
+# Run the server
 uvicorn main:app --reload --timeout-keep-alive 120
-The API will be available at http://127.0.0.1:8000.
-
-4. Frontend Setup
-Bash
-
-# Navigate to the frontend directory in a new terminal
+            </div>
+            <h3 style="margin-top: 2rem;">Frontend Setup</h3>
+            <div class="code-block" data-aos="fade-up">
+# Navigate to frontend directory
 cd frontend
 
-# Install Node.js dependencies
+# Install dependencies
 npm install
 
-# Run the React development server
+# Run the development server
 npm start
-The application will open at http://localhost:3000.
+            </div>
+        </section>
+        
+        <footer>
+            <p>Powered by the Google Gemini API &bull; Dataset from Kaggle</p>
+        </footer>
+    </div>
 
-📖 Acknowledgements
-This project was built on the Fake and Real News Dataset available on Kaggle.
-
-Powered by the Google Gemini API.
-
-Frontend bootstrapped with Create React App.
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            once: true,
+            duration: 800,
+        });
+    </script>
+</body>
+</html>
