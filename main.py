@@ -92,6 +92,7 @@ import os
 import asyncio
 import json
 import requests
+import numpy as np
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 from dotenv import load_dotenv
@@ -119,27 +120,28 @@ except FileNotFoundError:
     model = None
     vectorizer = None
 
+
 # --- Asynchronous Gemini Helper Function ---
 async def get_gemini_verdict(text: str):
     print("Requesting detailed verdict and justification from Gemini agent...")
     try:
         agent_model = genai.GenerativeModel('gemini-1.5-pro-latest')
         prompt = f"""
-        **Act as an expert fact-checking journalist.**
+        *Act as an expert fact-checking journalist.*
         Your sole task is to analyze the following news article and determine its authenticity.
-        **Follow these steps rigorously:**
-        1.  Analyze the article for claims, biased language, and overall context.
-        2.  Identify a list of 3 to 5 key words or short phrases that most strongly influenced your decision.
-        3.  Determine a final verdict of "Real" or "Fake".
-        **Your Final Task:**
+        *Follow these steps rigorously:*
+        1. Analyze the article for claims, biased language, and overall context.
+        2. Identify a list of 3 to 5 key words or short phrases that most strongly influenced your decision.
+        3. Determine a final verdict of "Real" or "Fake".
+        *Your Final Task:*
         Format your response as a single, valid JSON object with two keys:
         - "verdict": Your single-word verdict ("Real" or "Fake").
         - "justification_phrases": A JSON array of the 3-5 key phrases you identified.
-        **Article Text to Analyze:**
+        *Article Text to Analyze:*
         ---
         {text}
         ---
-""" 
+        """
         response = await agent_model.generate_content_async(prompt)
         response_text = response.text.strip().replace("```json", "").replace("```", "")
         data = json.loads(response_text)
@@ -153,6 +155,7 @@ async def get_gemini_verdict(text: str):
         print(f"Error processing Gemini response: {e}")
         return {"verdict": "Error", "phrases": []}
 
+
 # --- FastAPI App Setup ---
 app = FastAPI(title="Explainable AI News Detector")
 app.add_middleware(
@@ -163,14 +166,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 class NewsArticle(BaseModel):
     text: str
+
 
 class UrlPayload(BaseModel):
     url: str
 
+
 def preprocess_text(text):
     return re.sub(r'^\w+\s*\([^)]*\)\s*-\s*', '', text, flags=re.IGNORECASE).lower()
+
 
 def fetch_url_text(url: str, timeout: float = 12.0) -> str:
     """Fetch and clean article text from a URL."""
@@ -191,6 +198,26 @@ def fetch_url_text(url: str, timeout: float = 12.0) -> str:
     text = " ".join(soup.get_text(separator=" ").split())
     return text[:200000]  # cap size
 
+
+def get_top_keywords(vectorizer, model, text, top_n=5):
+    """Extract top high-weightage words from the ML model for a given text."""
+    if not vectorizer or not model:
+        return []
+
+    vectorized = vectorizer.transform([text])
+    feature_names = np.array(vectorizer.get_feature_names_out())
+
+    # Get model coefficients for class 1 (Real vs Fake)
+    coefs = model.coef_[0]
+
+    # Multiply feature weights with TF-IDF values for this doc
+    weighted = vectorized.toarray()[0] * coefs
+
+    # Get top N indices
+    top_indices = np.argsort(np.abs(weighted))[-top_n:][::-1]
+    return feature_names[top_indices].tolist()
+
+
 # --- Analyze Text Endpoint ---
 @app.post("/analyze")
 async def analyze_news(article: NewsArticle):
@@ -198,22 +225,24 @@ async def analyze_news(article: NewsArticle):
         return {"error": "ML Model not loaded."}
 
     loop = asyncio.get_running_loop()
+
     def run_ml_model_in_thread():
         processed_text = preprocess_text(article.text)
         vectorized_text = vectorizer.transform([processed_text])
         prediction = model.predict(vectorized_text)[0]
         proba = model.predict_proba(vectorized_text)[0]
-        return prediction, proba
+        keywords = get_top_keywords(vectorizer, model, processed_text)
+        return prediction, proba, keywords
 
     ml_task = loop.run_in_executor(None, run_ml_model_in_thread)
     gemini_task = get_gemini_verdict(article.text)
 
     (ml_result, gemini_result) = await asyncio.gather(ml_task, gemini_task)
-    
-    ml_prediction_val, prediction_proba = ml_result
+
+    ml_prediction_val, prediction_proba, keywords = ml_result
     ml_verdict = "Real" if ml_prediction_val == 1 else "Fake"
     ml_confidence = prediction_proba[1] if ml_prediction_val == 1 else prediction_proba[0]
-    
+
     gemini_verdict = gemini_result["verdict"]
     justification_phrases = gemini_result["phrases"]
 
@@ -230,7 +259,9 @@ async def analyze_news(article: NewsArticle):
         "ml_confidence": float(f"{ml_confidence:.2f}"),
         "gemini_verdict": gemini_verdict,
         "justification_phrases": justification_phrases,
+        "highlighted_words": keywords,
     }
+
 
 # --- Analyze URL Endpoint ---
 @app.post("/analyze_url")
@@ -250,25 +281,30 @@ async def analyze_url(payload: UrlPayload):
             "ml_confidence": None,
             "gemini_verdict": gemini_result["verdict"],
             "justification_phrases": gemini_result["phrases"],
+            "highlighted_words": [],
             "source": payload.url,
             "note": "Local ML model/vectorizer not loaded.",
         }
 
     loop = asyncio.get_running_loop()
+
     def run_ml_model_in_thread():
         processed = preprocess_text(page_text)
         vect = vectorizer.transform([processed])
         pred = model.predict(vect)[0]
         proba = model.predict_proba(vect)[0]
-        return pred, proba
+        keywords = get_top_keywords(vectorizer, model, processed)
+        return pred, proba, keywords
 
     ml_task = loop.run_in_executor(None, run_ml_model_in_thread)
     gemini_task = get_gemini_verdict(page_text)
+
     (ml_result, gemini_result) = await asyncio.gather(ml_task, gemini_task)
 
-    pred_val, prediction_proba = ml_result
+    pred_val, prediction_proba, keywords = ml_result
     ml_verdict = "Real" if pred_val == 1 else "Fake"
     ml_confidence = prediction_proba[1] if pred_val == 1 else prediction_proba[0]
+
     gemini_verdict = gemini_result["verdict"]
     justification_phrases = gemini_result["phrases"]
 
@@ -285,9 +321,12 @@ async def analyze_url(payload: UrlPayload):
         "ml_confidence": float(f"{ml_confidence:.2f}"),
         "gemini_verdict": gemini_verdict,
         "justification_phrases": justification_phrases,
+        "highlighted_words": keywords,
         "source": payload.url,
     }
 
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
 
